@@ -18,7 +18,9 @@ $servers = @()
 $count = 0
 
 write-host "{"
-write-host " `"data`":[`n"
+write-host "`t`"data`":"
+write-host "`t["
+
 foreach($line in $lines.split("`n"))
 {
     $servers += [regex]::Matches($line, '(?:(?:1\d\d|2[0-5][0-5]|2[0-4]\d|0?[1-9]\d|0?0?\d)\.){3}(?:1\d\d|2[0-5][0-5]|2[0-4]\d|0?[1-9]\d|0?0?\d)') | %{ $_.Groups[0].Value } | select -first 1
@@ -27,16 +29,15 @@ foreach($server in $servers)
 {
     if ($count -lt $servers.Count-1)
     {
-        $line= "`t{`n " + "`t`t`"{#NTPSERVER}`":`""+$server+"`""+"`n`t},`n"
+        $line= "`t`t{`n " + "`t`t`t`"{#NTPSERVER}`":`""+$server+"`""+"`n`t`t},"
         write-host $line
     }
     elseif ($count -ge $servers.Count-1)
     {     
-        $line= "`t{`n " + "`t`t`"{#NTPSERVER}`":`""+$server+"`""+"`n`t},`n"
+        $line= "`t`t{`n " + "`t`t`t`"{#NTPSERVER}`":`""+$server+"`""+"`n`t`t}"
         write-host $line
     }
     $count++;
 }
-write-host
-write-host " ]"
+write-host "`t]"
 write-host "}"
